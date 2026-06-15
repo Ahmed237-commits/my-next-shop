@@ -2,148 +2,153 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon, PlayCircleIcon } from "@heroicons/react/24/outline";
 import { motion, AnimatePresence } from "framer-motion";
-// داتا السلايدات: كل سلايد ليه كلامه، ألوانه، والصورة الـ Illustration الخاصة بيه
+
 const slides = [
   {
-    title: "Next-Gen Tech, Delivered to You.",
-    desc: "Upgrade your lifestyle with our premium selection of electronics. Smart devices, cutting-edge laptops, and accessories.",
+    title: "Premium Tech.",
+    subtitle: "Elevate Your Digital Life",
+    desc: "Unbox the future with our curated collection of elite gadgets and accessories. Next-day delivery, unboxed with care.",
     buttonText: "Explore Gear",
-    image: "/undraw_morning-news_h9nz.svg", // حط هنا أول صورة إلكترونيات عندك
-    bgGradient: "from-[#ff80b5] to-[#9089fc]"
+    image: "/undraw_morning-news_h9nz.svg",
+    accentColor: "from-violet-600 to-fuchsia-500",
+    bgLight: "from-violet-100/30 to-fuchsia-100/30",
   },
   {
-    title: "Unmatched Sound Experience.",
-    desc: "Immerse yourself in pure audio with our new collection of noise-canceling headphones and wireless earbuds.",
+    title: "Immersive Audio.",
+    subtitle: "Feel Every Beat",
+    desc: "Studio-grade noise cancellation. Wireless freedom. Discover sound that moves your soul.",
     buttonText: "Discover Sound",
-    image:   "/undraw_listening-to-podcasts_j0hm.svg"
-, // تقدر تغيرها لصورة سماعة أو تسيب نفس الـ SVG مؤقتاً
-    bgGradient: "from-[#80eedd] to-[#9089fc]"
+    image: "/undraw_listening-to-podcasts_j0hm.svg",
+    accentColor: "from-cyan-600 to-blue-500",
+    bgLight: "from-cyan-100/30 to-blue-100/30",
   },
   {
-    title: "Power In Your Hands.",
-    desc: "Stay ahead of the curve with latest flagship smartphones and smartwatches designed for the future.",
+    title: "Power & Performance.",
+    subtitle: "Rule the Game",
+    desc: "Dominate with next-gen processors and blistering displays. Gaming, streaming, creating — do it all flawlessly.",
     buttonText: "View Phones",
-    image: "/undraw_talking-on-the-phone_lc9v.svg", // تقدر تغيرها لصورة موبايل
-    bgGradient: "from-[#ffb580] to-[#e63946]"
-  }
+    image: "/undraw_talking-on-the-phone_lc9v.svg",
+    accentColor: "from-orange-500 to-red-500",
+    bgLight: "from-orange-100/30 to-red-100/30",
+  },
 ];
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // لوجيك تغيير السلايد أوتوماتيكياً كل 4 ثواني
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 4000);
+    }, 5000);
     return () => clearInterval(timer);
   }, []);
 
   return (
-    <div className="relative isolate px-4 pt-24 sm:px-6 lg:px-8 min-h-[85vh] flex items-center overflow-hidden">
-      
-      {/* الـ Background Gradient المتغير ديناميكياً مع السلايد */}
-      <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
-        <motion.div 
+<div className="relative isolate px-4 pt-20 sm:pt-24 sm:px-6 lg:px-8 min-h-[85vh] flex items-center overflow-hidden">      {/* خلفية ديناميكية */}
+      <div className="absolute inset-0 -z-10">
+        <motion.div
           key={currentSlide}
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.25 }}
+          animate={{ opacity: 0.4 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1 }}
-          className={`relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr ${slides[currentSlide].bgGradient} sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]`} 
+          transition={{ duration: 1.2 }}
+          className={`absolute inset-0 bg-gradient-to-br ${slides[currentSlide].bgLight}`}
         />
       </div>
 
       <div className="mx-auto max-w-7xl w-full py-12 sm:py-16 lg:py-20">
-        {/* استخدام AnimatePresence عشان لما العناصر تتغير تختفي وتظهر بنعومة */}
         <AnimatePresence mode="wait">
-          <motion.div 
+          <motion.div
             key={currentSlide}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="flex flex-col items-center gap-12 lg:flex-row lg:gap-16"
+            transition={{ duration: 0.7 }}
+            className="grid lg:grid-cols-2 gap-16 items-center"
           >
-            
-            {/* الجزء النصي المتغير */}
-            <div className="flex-1 text-center lg:text-left z-10">
-              <motion.h1 
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-                className="bg-gradient-to-r from-gray-900 via-indigo-900 to-gray-900 bg-clip-text text-4xl font-black tracking-tight text-transparent sm:text-5xl lg:text-6xl"
+            {/* المحتوى النصي */}
+            <div className="text-center lg:text-left z-10">
+              <motion.span
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className={`inline-block bg-gradient-to-r ${slides[currentSlide].accentColor} text-transparent bg-clip-text text-sm font-bold tracking-widest uppercase mb-4`}
+              >
+                {slides[currentSlide].subtitle}
+              </motion.span>
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-5xl font-black tracking-tight text-gray-900 sm:text-6xl lg:text-7xl leading-[1.1]"
               >
                 {slides[currentSlide].title}
               </motion.h1>
-              
-              <motion.p 
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-600 lg:mx-0"
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="mt-6 max-w-md mx-auto lg:mx-0 text-lg text-gray-600 leading-relaxed"
               >
                 {slides[currentSlide].desc}
               </motion.p>
-              
-              <motion.div 
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4, duration: 0.5 }}
-                className="mt-10 flex items-center justify-center gap-x-6 lg:justify-start"
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="mt-10 flex flex-wrap items-center justify-center lg:justify-start gap-5"
               >
                 <Link
                   href="/Products"
-                  className="group inline-flex items-center gap-2 rounded-full bg-indigo-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-250 transition-all duration-300 hover:scale-105 hover:bg-indigo-700"
+                  className={`group inline-flex items-center gap-2 rounded-full bg-gradient-to-r ${slides[currentSlide].accentColor} px-8 py-4 text-sm font-bold text-white shadow-lg shadow-gray-400/20 transition-all duration-300 hover:scale-105 hover:shadow-xl`}
                 >
                   {slides[currentSlide].buttonText}
-                  <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <ArrowRightIcon className="h-5 w-5 transition-transform group-hover:translate-x-1.5" />
                 </Link>
+                <button className="inline-flex items-center gap-2 text-sm font-bold text-gray-700 hover:text-violet-600 transition-colors">
+                  <PlayCircleIcon className="h-5 w-5" /> Watch Demo
+                </button>
               </motion.div>
             </div>
 
-            {/* الجزء البصري (الصورة المتغيرة مع حركة عومان خفيفة) */}
-            <div className="flex-1 w-full max-w-md lg:max-w-none">
-              <div className="relative mx-auto">
-                {/* توهج خلفي ملون */}
-                <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-indigo-500 to-purple-500 opacity-10 blur-3xl" />
-                
-                <motion.div 
-                  animate={{ y: [0, -12, 0] }} 
-                  transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                  className="relative flex justify-center"
-                >
-                  <Image
-                    src={slides[currentSlide].image} 
-                    alt="Store Showcase"
-                    width={550}
-                    height={550}
-                    className="h-auto w-full max-h-[450px] object-contain drop-shadow-3xl"
-                    priority
-                  />
-                </motion.div>
-              </div>
+            {/* الصورة */}
+            <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
+              <div className={`absolute -inset-4 rounded-3xl bg-gradient-to-r ${slides[currentSlide].accentColor} opacity-10 blur-3xl`} />
+              <motion.div
+                animate={{ y: [0, -15, 0] }}
+                transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
+                className="relative flex justify-center drop-shadow-2xl"
+              >
+                <Image
+                  src={slides[currentSlide].image}
+                  alt="Hero Illustration"
+                  width={600}
+                  height={600}
+                  className="h-auto w-full max-h-[500px] object-contain"
+                  priority
+                />
+              </motion.div>
             </div>
-
           </motion.div>
         </AnimatePresence>
 
-        {/* مؤشرات السلايدر السفلية (Dots) - متوافقة وممتازة للموبايل */}
-        <div className="mt-12 flex justify-center lg:justify-start gap-2.5">
+        {/* نقاط التنقل */}
+        <div className="mt-16 flex justify-center lg:justify-start gap-3">
           {slides.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                currentSlide === index ? "w-8 bg-indigo-600" : "w-2 bg-gray-300 hover:bg-gray-400"
+              className={`h-2.5 rounded-full transition-all duration-300 ${
+                currentSlide === index
+                  ? "w-10 bg-violet-600"
+                  : "w-2.5 bg-gray-300 hover:bg-gray-400"
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>
-
       </div>
     </div>
   );

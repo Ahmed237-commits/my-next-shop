@@ -5,16 +5,11 @@ import Footer from "./components/Footer";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#fafafa]">
-      {/* Header */}
-      
-      {/* Body */}
+    <div className="flex min-h-screen flex-col bg-white">
       <main className="flex-grow">
         <Hero />
         <Features />
       </main>
-
-      {/* Footer */}
       <Footer />
     </div>
   );

@@ -62,7 +62,7 @@ export default function About() {
               {/* إحصائيات */}
               <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-8 lg:justify-start">
                 {[
-                  { value: "8+", label: "Years of Excellence" },
+                  { value: "8", label: "Years of Excellence" },
                   { value: "25k+", label: "Happy Customers" },
                   { value: "99%", label: "Satisfaction Rate" },
                 ].map((stat) => (

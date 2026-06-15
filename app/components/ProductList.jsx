@@ -1,6 +1,6 @@
 'use client';
 import { useState, useMemo } from 'react';
-import ProductCard from './ProductCard';
+import ProductCard from '../components/ProductCard';
 
 export default function ProductList({ products }) {
     const [searchQuery, setSearchQuery] = useState('');
