@@ -1,5 +1,5 @@
 import React from 'react'
-import ProductList from '@/app/components/ProductList'
+import ProductList from '../../../app/components/ProductList'
 
 async function getProducts() {
   const res = await fetch('https://dummyjson.com/products?limit=100')

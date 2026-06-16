@@ -1,7 +1,7 @@
 import { Geist, Geist_Mono, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import NavBar from "./components/Navbar";
-
+import DataContext  from './context/dataContext';
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,7 +31,9 @@ export default function RootLayout({ children }) {
           
           {/* المسافة بين الهيدر والبودي */}
           <main className="flex-grow pt-16 sm:pt-20">
+   <DataContext>
             {children}
+  </DataContext>
           </main>
         </div>
       </body>

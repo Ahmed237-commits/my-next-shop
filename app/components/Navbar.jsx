@@ -10,7 +10,17 @@ import {
   Bars3Icon,
   XMarkIcon,
   SparklesIcon,
+ArrowDownLeftIcon
 } from "@heroicons/react/24/outline";
+
+// 1. المسارات المحظورة التي لا يظهر فيها الـ Navbar
+const disabledNavbarRoutes = [
+  "/dashboard",
+  "/login",
+  "/signUp",
+  "/checkout",
+  "/admin",
+];
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -23,7 +33,12 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false); // التحكم في قائمة الحساب المنسدلة
   const { scrollYProgress } = useScroll();
+
+  // محاكاة بيانات المستخدم (قم بربطها بنظام الـ Auth الخاص بك لاحقاً)
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // غيرها لـ false لرؤية زر Get Started
+  const [userName, setUserName] = useState("Ahmed");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,6 +53,14 @@ export default function Navbar() {
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
+
+  const shouldHideNavbar = disabledNavbarRoutes.some((route) =>
+    pathname?.startsWith(route)
+  );
+
+  if (shouldHideNavbar) {
+    return null;
+  }
 
   return (
     <>
@@ -104,20 +127,68 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* أيقونات الإجراءات */}
-          <div className="flex flex-1 justify-end items-center gap-0.5 sm:gap-2">
+          {/* أيقونات الإجراءات وزر الـ Auth لسطح المكتب */}
+          <div className="flex flex-1 justify-end items-center gap-1 sm:gap-3">
+            
+            {/* زر البحث المحتفظ به من تعديلاتك */}
             <button className="p-2 text-gray-700 hover:text-indigo-600 rounded-full hover:bg-gray-100/70 transition-colors">
               <MagnifyingGlassIcon className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
             </button>
-            <Link href="/Profile" className="hidden sm:inline-block p-2 text-gray-700 hover:text-indigo-600 rounded-full hover:bg-gray-100/70 transition-colors">
-              <UserIcon className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
-            </Link>
-            <Link href="/Cart" className="p-2 text-gray-700 hover:text-indigo-600 rounded-full hover:bg-gray-100/70 transition-all relative group">
-              <ShoppingCartIcon className="h-4.5 w-4.5 sm:h-5 sm:w-5 group-hover:scale-105 transition-transform" />
-              <span className="absolute top-0.5 right-0.5 flex h-3.5 w-3.5 sm:h-4 sm:w-4 items-center justify-center rounded-full bg-indigo-600 text-[9px] sm:text-[10px] font-bold text-white shadow-md shadow-indigo-300">
-                3
-              </span>
-            </Link>
+
+            {/* الجزء الديناميكي: بناءً على حالة تسجيل الدخول */}
+            {isLoggedIn ? (
+              <div className="relative hidden md:block">
+                {/* اسم المستخدم كمشغل للقائمة المنسدلة */}
+                <button
+                  onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                  className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-gray-800 hover:text-indigo-600 transition-colors bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-xl border border-gray-200/60"
+                >
+                  <UserIcon className="h-4 w-4 text-indigo-600" />
+                  <span>Hello, <span className="text-indigo-600">{userName}</span></span>
+                </button>
+
+                {/* القائمة المنسدلة للحساب */}
+                <AnimatePresence>
+                  {isProfileDropdownOpen && (
+                    <>
+                      <div className="fixed inset-0 z-10" onClick={() => setIsProfileDropdownOpen(false)} />
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl z-20 p-1"
+                      >
+                        <Link
+                          href="/Profile"
+                          onClick={() => setIsProfileDropdownOpen(false)}
+                          className="flex items-center gap-2 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg transition-colors"
+                        >
+                          <UserIcon className="h-4 w-4" /> My Profile
+                        </Link>
+                        <button
+                          onClick={() => {
+                            setIsProfileDropdownOpen(false);
+                            setIsLoggedIn(false); // تجربة تسجيل الخروج
+                          }}
+                          className="flex items-center gap-2 w-full text-left px-3 py-2 text-xs font-semibold text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        >
+                          <ArrowDownLeftIcon className="h-4 w-4" /> Log Out
+                        </button>
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <Link 
+                href="/signUp" 
+                className="hidden md:inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white text-xs sm:text-sm font-bold px-4 py-2 rounded-xl transition-all shadow-md shadow-indigo-200 active:scale-95"
+              >
+                Get Started
+              </Link>
+            )}
+
+            {/* زر قائمة الموبايل */}
             <button
               onClick={() => setIsMobileMenuOpen(true)}
               className="p-2 text-gray-800 lg:hidden rounded-full hover:bg-gray-100/70 transition-colors"
@@ -154,6 +225,7 @@ export default function Navbar() {
                   </button>
                 </div>
 
+                {/* روابط الملاحة العادية */}
                 <div className="mt-6 space-y-2">
                   {navLinks.map((link) => (
                     <Link
@@ -172,14 +244,48 @@ export default function Navbar() {
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-gray-100">
-                <Link
-                  href="/Profile"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-center gap-2 w-full rounded-xl border border-gray-200 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  <UserIcon className="h-5 w-5" /> My Account
-                </Link>
+              {/* أزرار أسفل قائمة الموبايل التفاعلية بناءً على الـ Auth */}
+              <div className="pt-6 border-t border-gray-100 space-y-3">
+                {isLoggedIn ? (
+                  <>
+                    <div className="px-3 py-2 text-sm font-medium text-gray-500">
+                      Logged in as: <span className="font-bold text-gray-900">{userName}</span>
+                    </div>
+                    <Link
+                      href="/Profile"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center justify-center gap-2 w-full rounded-xl border border-gray-200 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      <UserIcon className="h-5 w-5 text-indigo-600" /> My Account
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        setIsLoggedIn(false);
+                      }}
+                      className="flex items-center justify-center gap-2 w-full rounded-xl bg-red-50 text-red-600 py-3 text-sm font-bold hover:bg-red-100 transition-colors"
+                    >
+                      <ArrowDownLeftIcon className="h-5 w-5" /> Log Out
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/Profile"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center justify-center gap-2 w-full rounded-xl border border-gray-200 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      <UserIcon className="h-5 w-5" /> My Account
+                    </Link>
+                    <Link
+                      href="/signUp"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="flex items-center justify-center w-full rounded-xl bg-indigo-600 py-3 text-sm font-bold text-white hover:bg-indigo-500 shadow-lg shadow-indigo-100 transition-colors text-center"
+                    >
+                      Get Started
+                    </Link>
+                  </>
+                )}
               </div>
             </motion.div>
           </>
